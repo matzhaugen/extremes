@@ -13,7 +13,7 @@ get.ncdf.light = function(filename, lat_start, lat_count, lon_start, lon_count, 
 
 path.to.files = "../rsriver/timefirst/"
 
-ncdata <- nc_open('../rsriver/timefirst/trefht_4200.nc')
+ncdata <- nc_open(paste(path.to.files, 'trefht_4200.nc', sep=""))
 lons = ncvar_get(ncdata, 'lon') - 180
 lats = ncvar_get(ncdata, 'lat')
 nc_close(ncdata)
