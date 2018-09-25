@@ -1,6 +1,6 @@
 # extremes
 
-This repo contains the code needed to calculate and plot the results of  "Estimating Changes in Temperature Distributions in a Large Ensemble of Climate Simulations Using Quantile Regression" (10.1175/JCLI-D-17-0782.1) Journal of Climate, vol. 31, no. 20.
+This repo contains the code needed to calculate and plot the results of  "Estimating Changes in Temperature Distributions in a Large Ensemble of Climate Simulations Using Quantile Regression" (10.1175/JCLI-D-17-0782.1) Journal of Climate, vol. 31, no. 20. 
 
 There are a number of key files:
 1. boot2d.R - This is the file where the main computation is performed, i.e. the quantiles are calculated for North America.
@@ -16,3 +16,5 @@ The `helper.R` file contains a lot of helper functions used in plotting etc.
 
 3. CV.R Is the model selection module where I calculate which model is the best one, where the main calculating 
 loop is on line 104 where we cross-validate one pixel. The rest of the module does some plotting.
+
+4. The paper.R file contains the code for plotting most of the figures in the paper.
