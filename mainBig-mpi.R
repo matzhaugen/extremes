@@ -10,14 +10,14 @@ ncdata <- nc_open('../rsriver/timefirst/trefht_4200.nc')
 # print(ncdata)
 # data = ncvar_get(ncdata, 'TREFHT')
 lons = signif(ncvar_get(ncdata, 'lon'), digits=3)
-lons[lons>180] = lons[lons>180] - 360
-lats = ncvar_get(ncdata, 'lat')
+# lons[lons>180] = lons[lons>180] - 360
+lats = signif(ncvar_get(ncdata, 'lat'), digits=3)
 nc_close(ncdata)
 
-lat_min = 10
-lat_max = 60
-lon_min = -130
-lon_max = -60
+lat_min = 0
+lat_max = 90
+lon_min = 180
+lon_max = 360
 n_years_window = 10
 n_years_increment = 10
 days_per_year = 365

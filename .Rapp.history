@@ -1,0 +1,132 @@
+source("/Users/mahaugen/Cloud/Research/MAF/Paper/FormalPaper/MAFpaperFormal.tex")
+source("/Users/mahaugen/Cloud/Research/MAF/Paper/FormalPaper/TreeRingDataExample.tex")
+library(devtools)
+install_github("matzhaugen/maf")
+library(maf)
+treeringTimeseries
+maf.obj = maf(treeringTimeseries)
+install.packages("devtools")
+library(devtools)
+install?
+?
+``
+?install
+?maf
+maf
+devtools::install_local("~/cloud/MafPackageR/maf")
+devtools::build("~/cloud/MafPackageR/maf")
+devtools::install_local("~/cloud/MafPackageR/maf_0.0.0.9000.tar.gz")
+maf
+maf::maf()
+?maf
+library(devtools)
+install_github("matzhaugen/maf")
+?maf
+library(maf)
+?maf
+maf()
+current.code = as.package("maf")
+devtools::document(current.code)
+current.code = as.package("maf")
+devtools::load_all(current.code)
+devtools::install_local("~/cloud/MafPackageR/maf")
+library(maf)
+?maf
+setwd(~/mahaugen/Extremes/r_code/shinyapp)
+setwd(""~/mahaugen/Extremes/r_code/shinyapp")
+setwd("~/mahaugen/Extremes/r_code/shinyapp")
+setwd("~/mahaugen/Extremes/r_code/shinyapp")
+setwd("~/Extremes/r_code/shinyapp")
+ls
+list.files()
+library(shiny)
+install.packages("shiny")
+runApp("shinyapp")
+library(shiny)
+runApp("shinyapp")
+setwd("~/Extremes/r_code/")
+runApp("shinyapp")
+faithful$eruptions
+faithful$eruptions#
+q
+faithful$eruptions#
+q#
+q()
+faithful$eruptions
+runApp("shinyapp")
+runApp("shinyapp")
+runApp("shinyapp")
+runApp("shinyapp")
+day_of_year = 1:365#
+x = rep(day_of_year, upper_year)#
+t = c(t(matrix(rep(1:upper_year, days_per_year), ncol=days_per_year)))#
+x.basis = ns(x, df=6)#
+t.basis = ns(t, df=4)#
+rm(t,x)#
+gc()
+x.basis
+library(spline)
+library(splines)
+day_of_year = 1:365#
+x = rep(day_of_year, upper_year)#
+t = c(t(matrix(rep(1:upper_year, days_per_year), ncol=days_per_year)))#
+x.basis = ns(x, df=6)#
+t.basis = ns(t, df=4)#
+rm(t,x)#
+gc()
+upper_year = 250
+t = c(t(matrix(rep(1:upper_year, days_per_year), ncol=days_per_year)))
+x = rep(day_of_year, upper_year)
+day_of_year = 1:365
+days_per_year = 365
+x = rep(day_of_year, upper_year)
+t = c(t(matrix(rep(1:upper_year, days_per_year), ncol=days_per_year)))
+x.basis = ns(x, df=6)
+t.basis = ns(t, df=4)
+rm(t,x)
+gc()
+x.basis
+X = model.matrix(~x.basis:t.basis)
+colnames(X)
+runApp("shinyapp")
+runApp("shinyapp")
+runApp("shinyapp")
+runApp("shinyapp")
+runApp("shinyapp")
+runApp("shinyapp")
+runApp("shinyapp")
+runApp("shinyapp")
+runApp("shinyapp")
+runApp("shinyapp")
+runApp("shinyapp")
+library(plotly)
+install.packages("plotly")
+packageVersion('plotly')
+?plot_ly
+runApp("shinyapp")
+p <- plot_ly(z = ~volcano) %>% add_surface()
+runApp("shinyapp")
+library(plotly)
+runApp("shinyapp")
+install.packages("ggplot")
+install.packages("ggplot2")
+runApp("shinyapp")
+runApp("shinyapp")
+runApp("shinyapp")
+runApp("shinyapp")
+runApp("shinyapp")
+runApp("shinyapp")
+matric(c(1,2,3,4), 2,2)
+a= matrix(c(1,2,3,4), 2,2)
+a
+c(a)
+5 %% 5
+(5 - 1) %% 4
+(5 - 1) %% 4 + 1
+(5 - 1) %% 5
+365 * 250
+a = c(364, 365, 366, 91251)
+(a - 1) %% 365 + 1
+(a - 1) // 365 + 1
+(a - 1) %/% 365 + 1
+((a - 1) %/% 365) %% 250 + 1

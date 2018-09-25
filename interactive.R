@@ -1,12 +1,12 @@
 library(ncdf4)
 # Read a subset of the netcdf file based on starting lat/lon/time indeces. 
 # Also include the index count for each variable.
-get.ncdf.light = function(filename, lat_start, lat_count, lon_start, lon_count, t_start, t_count) {
+get.ncdf.timefirst = function(filename, lat_start, lat_count, lon_start, lon_count, t_start, t_count, varname='TREFHT') {
 	ncdata <- nc_open(filename)	
 		data = ncvar_get(ncdata, 
-		'TREFHT', 
-		start=c(lon_start, lat_start, t_start), 
-		count=c(lon_count, lat_count, t_count))
+		varname, 
+		start=c(t_start, lon_start, lat_start), 
+		count=c(t_count, lon_count, lat_count))
 	nc_close(ncdata)
 	data
 }
@@ -14,7 +14,8 @@ get.ncdf.light = function(filename, lat_start, lat_count, lon_start, lon_count, 
 path.to.files = "../rsriver/timefirst/"
 
 ncdata <- nc_open(paste(path.to.files, 'trefht_4200.nc', sep=""))
-lons = ncvar_get(ncdata, 'lon') - 180
+lons = ncvar_get(ncdata, 'lon')
+lons[lons>180] = lons[lons>180] - 360
 lats = ncvar_get(ncdata, 'lat')
 nc_close(ncdata)
 KtoC = 273.15
@@ -61,11 +62,11 @@ print(paste("with co-ordinates #:", signif(lats[lat_idx], digits=3),
 
 #test 
 print(c(lats[lat_idx], lons[lon_idx]))
-path.to.files = "../rsriver/spacefirst/"
+path.to.files = "../rsriver/timefirst/"
 files = list.files(path.to.files)
 one_pixel_i_s = unlist(lapply(files, function(f) {
 				path_f = paste(path.to.files, f, sep="")
-				get.ncdf.light(path_f, lat_idx, 1, lon_idx, 1, 1, days_per_year * t_grace) - KtoC
+				get.ncdf.timefirst(path_f, lat_idx, 1, lon_idx, 1, 1, days_per_year * t_grace) - KtoC
 			}))
 temp_i_s = array(one_pixel_i_s, dim=c(days_per_year, t_grace, n_files))
 hist(temp_i_s[1:30,,]) 

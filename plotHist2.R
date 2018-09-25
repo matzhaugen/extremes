@@ -5,8 +5,10 @@ path.to.files = "../rsriver/timefirst/"
 # ncdata <- nc_open('CCSM3_temperatures/4001_5000_i1400_1870_R01_combine_TREFHTMX_US_only.nc')
 ncdata <- nc_open('../rsriver/timefirst/trefht_4200.nc')
 # print(ncdata)
-# data = ncvar_get(ncdata, 'TREFHT')
-lons = ncvar_get(ncdata, 'lon') - 180
+varname = 'TREFHT'
+data = ncvar_get(ncdata, 'TREFHT')
+lons = signif(ncvar_get(ncdata, 'lon'), digits=3)
+lons[lons>180] = lons[lons>180] - 360
 lats = ncvar_get(ncdata, 'lat')
 nc_close(ncdata)
 KtoC = 273.15
@@ -40,12 +42,17 @@ files = list.files(path.to.files)[1:n_files]
 day_of_year = 1:365
 pos_idx=100 # a good pixel to look at
 my_idx=c(204, 175, 169)
-t_grace=10
-d_grace=10
+t_grace=15
+d_grace=15
 start.time.tot <- Sys.time()
-breaks = seq(-70,50, 1)
+breaks = 100
+seasons = list(c(seq(365-31, 365), c(1:58)), #winter
+	c(60:(60+91)),  #spring
+	c(153:(153+91)), #summer
+	c(246:(246+90))) #fall
 
 hist.data = mclapply(1:n_pixels, function(pos_idx) {
+# hist.data = mclapply(1:10, function(pos_idx) {
 	res_lon_idx = (pos_idx-1) %% n_lons + 1
 	res_lat_idx = (pos_idx-1) %/% n_lons + 1
 	lon_idx = which(lons == restricted_lon[res_lon_idx])
@@ -56,28 +63,58 @@ hist.data = mclapply(1:n_pixels, function(pos_idx) {
 
 	one_pixel_i = unlist(lapply(files, function(f) {
 				path_f = paste(path.to.files, f, sep="")
-				get.ncdf.timefirst(path_f, lat_idx, 1, lon_idx, 1, 1, days_per_year * t_grace) - KtoC
+				get.ncdf.timefirst(path_f, lat_idx, 1, lon_idx, 1, 1, days_per_year * t_grace,
+					varname=varname) - KtoC
 			}))
 
 	one_pixel_f = unlist(lapply(files, function(f) {
 				path_f = paste(path.to.files, f, sep="")
-				get.ncdf.timefirst(path_f, lat_idx, 1, lon_idx, 1, days_per_year * (upper_year - t_grace), days_per_year * t_grace) - KtoC
+				get.ncdf.timefirst(path_f, lat_idx, 1, lon_idx, 1, days_per_year * (upper_year - t_grace), days_per_year * t_grace,
+					varname=varname) - KtoC
 			}))
 	temp_i = array(one_pixel_i, dim=c(days_per_year, t_grace, n_files))
 	temp_f = array(one_pixel_f, dim=c(days_per_year, t_grace, n_files))
 	temp_range = range(c(temp_i, temp_f))
-	if ((temp_range[1] < range(breaks)[1]) || (temp_range[2] > range(breaks)[2])) {
-		print(temp_range)
-	}
-	out = lapply(seq(1, 365, d_grace), function(start_idx) {
-		idx = 1:d_grace + min(start_idx, 366 - d_grace) - 1
-		h.i = hist(c(temp_i[idx,,]), breaks=breaks, plot=FALSE)
-		h.f = hist(c(temp_f[idx,,]), breaks=breaks, plot=FALSE)
-		list(counts.i=h.i$counts, counts.f=h.f$counts)
-	})
-}, mc.cores=mc.cores)
 
-save(hist.data, file="hist.Rdata")
+	# out = lapply(seq(1, 365, d_grace), function(start_idx) {
+	# 	idx = 1:d_grace + min(start_idx, 366 - d_grace) - 1
+	out = lapply(seasons, function(start_idx) {
+		idx = start_idx
+		hist_mom = lapply(1:B, function(b) {
+			if (b != 1) {
+				file_idx = sample(1:n_files, replace=T)
+			} else {
+				file_idx = 1:n_files
+				obs.i = c(temp_i[idx,,file_idx])
+				obs.f = c(temp_f[idx,,file_idx])
+				original_breaks <<- hist(c(obs.i, obs.f), breaks=breaks, plot=FALSE)$breaks
+			}
+			obs.i = c(temp_i[idx,,file_idx])
+			obs.f = c(temp_f[idx,,file_idx])
+			h.i = hist(obs.i, breaks=original_breaks, plot=FALSE)
+			h.f = hist(obs.f, breaks=original_breaks, plot=FALSE)
+			moments.i = c(mean(obs.i), sd(obs.i), skewness(obs.i))
+			moments.f = c(mean(obs.f), sd(obs.f), skewness(obs.f))
+			list(h.i = h.i, h.f = h.f, moments.i = moments.i, moments.f = moments.f)
+		})
+		hist_stats_i = hist_stats(do.call(rbind, lapply(hist_mom, function(el) {el$h.i$counts})))
+		hist_stats_f = hist_stats(do.call(rbind, lapply(hist_mom, function(el) {el$h.f$counts})))
+		mom_i = do.call(rbind, lapply(hist_mom, function(el) {el$moments.i}))
+		mom_f = do.call(rbind, lapply(hist_mom, function(el) {el$moments.f}))
+		list(breaks = original_breaks,
+			hist_stats_i = hist_stats_i,
+			hist_stats_f = hist_stats_f,
+			moments.i = hist_stats(mom_i),
+			moments.f = hist_stats(mom_f),
+			moments.d = hist_stats(mom_f - mom_i))
+	})
+		
+		# h.f = hist(c(temp_f[idx,,]), breaks=breaks, plot=FALSE)
+	out
+}, mc.cores = mc.cores)
+
+# save(hist.data, file="hist.Rdata")
+save(hist.data, file="histSeasons.Rdata")
 
 
 #test 

@@ -10,7 +10,8 @@ ncdata <- nc_open(paste(path.to.files, 'trefhtmx_4200.nc', sep=""))
 varname = 'TREFHTMX'
 # print(ncdata)
 # data = ncvar_get(ncdata, 'TREFHT')
-lons = signif(ncvar_get(ncdata, 'lon') - 180, digits=3)
+lons = signif(ncvar_get(ncdata, 'lon'), digits=3)
+lons[lons>180] = lons[lons>180] - 360
 lats = signif(ncvar_get(ncdata, 'lat'), digits=3)
 nc_close(ncdata)
 
@@ -45,7 +46,7 @@ day_of_year = 1:365
 x = rep(day_of_year, n_files*upper_year)
 t = rep(c(t(matrix(rep(1:upper_year, days_per_year), ncol=days_per_year))), n_files)
 x.int.basis = as.matrix(pbs(x, df=3))
-x.main.basis = as.matrix(pbs(x, df=16))
+x.main.basis = as.matrix(pbs(x, df=15))
 t.basis = ns(t, df=4)
 X = model.matrix(~x.main.basis + t.basis + x.int.basis:t.basis)
 coef = matrix(0, dim(X)[2], length(q))
